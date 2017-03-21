@@ -1,0 +1,19 @@
+[Unit]
+Description=Twilio.com SMS/Voice gateway
+After=docker.service
+PartOf=oncall.service
+
+[Service]
+Environment=NAME=twiliogw
+Environment=IMG=twiliogw
+ExecStartPre=-/usr/bin/docker rm -f $NAME
+ExecStart=/usr/bin/docker run \
+        -v /home/eventival/twiliogw/.env:/.env \
+        --publish=8081:9090 \
+	--name ${NAME} \
+	${IMG} 
+RestartSec=60
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
